@@ -9,6 +9,7 @@
   const formSuccess = document.getElementById('form-success');
   const yearEl = document.getElementById('year');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
@@ -39,7 +40,7 @@
   const parallaxSections = document.querySelectorAll('[data-parallax]');
 
   function updateParallax() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
 
     parallaxSections.forEach(function (section) {
       const rate = parseFloat(section.getAttribute('data-parallax')) || 0.2;
@@ -60,7 +61,7 @@
   const processSteps = document.querySelector('.process-steps');
 
   function updateProcessLine() {
-    if (!processSteps || prefersReducedMotion) return;
+    if (!processSteps || prefersReducedMotion || isMobile) return;
 
     const rect = processSteps.getBoundingClientRect();
     const viewportH = window.innerHeight;
@@ -127,6 +128,7 @@
     nav.classList.remove('open');
     navToggle.setAttribute('aria-expanded', 'false');
     navToggle.setAttribute('aria-label', 'Open menu');
+    document.body.classList.remove('nav-open');
     document.body.style.overflow = '';
   }
 
@@ -134,6 +136,7 @@
     nav.classList.add('open');
     navToggle.setAttribute('aria-expanded', 'true');
     navToggle.setAttribute('aria-label', 'Close menu');
+    document.body.classList.add('nav-open');
     document.body.style.overflow = 'hidden';
   }
 
@@ -147,6 +150,10 @@
   });
 
   navLinks.forEach(function (link) {
+    link.addEventListener('click', closeNav);
+  });
+
+  document.querySelectorAll('.nav-mobile-actions a').forEach(function (link) {
     link.addEventListener('click', closeNav);
   });
 
